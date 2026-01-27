@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#1a3a52">
+    <title>Do Óleo Sorocaba App - Solicite seu Orçamento</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a3a52;
+            --primary-light: #2a4a62;
+            --primary-foreground: #ffffff;
+            --background: #ffffff;
+            --foreground: #1a1a1a;
+            --card: #f8f9fa;
+            --card-foreground: #1a1a1a;
+            --secondary: #f0f4f8;
+            --secondary-foreground: #4a5568;
+            --muted: #e2e8f0;
+            --muted-foreground: #718096;
+            --accent: #10b981;
+            --accent-light: #34d399;
+            --accent-foreground: #ffffff;
+            --destructive: #ef4444;
+            --destructive-foreground: #ffffff;
+            --border: #e2e8f0;
+            --input: #f8f9fa;
+            --ring: #1a3a52;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+            --radius: 0.5rem;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            color: var(--foreground);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            width: 100%;
+            margin: 0 auto;
+            padding: 0 1rem;
+            max-width: 600px;
+        }
+
+        /* Header com logo visível */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            padding: 1rem 0;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%);
+            animation: shimmer 3s infinite linear;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo {
+            height: 4.5rem;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+            transition: var(--transition);
+        }
+
+        .logo:hover {
+            transform: translateY(-2px);
+        }
+
+        @media (min-width: 768px) {
+            .logo {
+                height: 5.5rem;
+            }
+        }
+
+        .header-text {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-top: 0.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Share button no header - SEM CONTORNO */
+        .share-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.4rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            position: relative;
+        }
+
+        .share-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.1);
+        }
+
+        .share-btn::after {
+            content: 'Compartilhar';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            margin-top: 5px;
+        }
+
+        .share-btn:hover::after {
+            opacity: 1;
+        }
+
+        /* Main content visível */
+        main {
+            flex: 1;
+            padding: 2rem 0;
+        }
+
+        .form-wrapper {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Trust badge visível */
+        .trust-badge {
+            margin-bottom: 2rem;
+            padding: 1.25rem;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: var(--radius);
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .trust-badge:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .trust-badge p {
+            font-size: 0.9rem;
+            color: var(--foreground);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .checkmark {
+            color: var(--accent);
+            font-weight: 600;
+            font-size: 1.25rem;
+        }
+
+        /* Form visível */
+        form {
+            display: block;
+        }
+
+        form.hidden {
+            display: none;
+        }
+
+        fieldset {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--background);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+            transition: var(--transition);
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-10px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        fieldset:hover {
+            box-shadow: var(--shadow-lg);
+        }
+
+        legend {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--foreground);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .fieldset-description {
+            font-size: 0.875rem;
+            color: var(--muted-foreground);
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--foreground);
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .required {
+            color: var(--destructive);
+        }
+
+        .optional {
+            color: var(--muted-foreground);
+            font-size: 0.8rem;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="number"],
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 0.375rem;
+            background: var(--input);
+            color: var(--foreground);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        input:disabled,
+        select:disabled {
+            background: var(--muted);
+            color: var(--muted-foreground);
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .input-hint {
+            font-size: 0.75rem;
+            color: var(--muted-foreground);
+            margin-top: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .error-message {
+            font-size: 0.875rem;
+            color: var(--destructive);
+            margin-top: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        /* Checkbox options melhorados */
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .checkbox-option {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            border: 2px solid var(--border);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+            background: var(--background);
+        }
+
+        .checkbox-option:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .checkbox-option.checked {
+            border-color: var(--accent);
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .checkbox-option input[type="checkbox"] {
+            width: 1.25rem;
+            height: 1.25rem;
+            cursor: pointer;
+            accent-color: var(--accent);
+            flex-shrink: 0;
+        }
+
+        .checkbox-option label {
+            margin: 0;
+            cursor: pointer;
+            flex: 1;
+            font-weight: 500;
+        }
+
+        .service-icon {
+            color: var(--accent);
+            font-size: 1.25rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Oil type section */
+        .oil-type-section {
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .oil-type-section.visible {
+            display: block;
+        }
+
+        /* Carros na Web button melhorado */
+        .carros-na-web-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: var(--radius);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+
+        .carros-na-web-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(37, 99, 235, 0.3);
+        }
+
+        /* Action buttons */
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        button {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            border-radius: var(--radius);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: var(--accent-foreground);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--background);
+            color: var(--foreground);
+            border: 2px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* Success state visível */
+        .success-container {
+            display: none;
+            text-align: center;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .success-container.active {
+            display: block;
+        }
+
+        .success-box {
+            margin-bottom: 2rem;
+            padding: 2.5rem 2rem;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .success-box h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--foreground);
+            margin-bottom: 0.75rem;
+        }
+
+        .success-box p {
+            color: var(--muted-foreground);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Footer visível */
+        footer {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: var(--primary-foreground);
+            padding: 2.5rem 0 1.5rem 0;
+            margin-top: 3rem;
+        }
+
+        footer h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .social-links {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .social-links {
+                grid-template-columns: repeat(4, 1fr);
+                max-width: 400px;
+                margin: 0 auto 2rem auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .social-links {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .social-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 0.5rem;
+            border-radius: var(--radius);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-decoration: none;
+            color: var(--primary-foreground);
+            transition: var(--transition);
+            font-size: 0.8rem;
+            font-weight: 500;
+            height: 100%;
+            justify-content: center;
+        }
+
+        .social-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .social-icon {
+            font-size: 1.8rem;
+            margin-bottom: 0.25rem;
+        }
+
+        /* Ícones específicos para cada rede social COM CORES E SÍMBOLOS */
+        .social-link.instagram .social-icon {
+            color: #E4405F; /* Cor do Instagram */
+        }
+
+        .social-link.facebook .social-icon {
+            color: #1877F2; /* Cor do Facebook */
+        }
+
+        .social-link.website .social-icon {
+            color: #34A853; /* Cor do Google/Website */
+        }
+
+        .social-link.whatsapp .social-icon {
+            color: #25D366; /* Cor do WhatsApp */
+        }
+
+        /* Map container visível */
+        .map-container {
+            width: 100%;
+            margin: 1.5rem 0;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            transition: var(--transition);
+        }
+
+        .map-container:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+        }
+
+        .map-container iframe {
+            display: block;
+            width: 100%;
+            height: 300px;
+            border: none;
+        }
+
+        .footer-info {
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 1.5rem;
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .footer-info p {
+            margin-bottom: 0.75rem;
+            line-height: 1.5;
+        }
+
+        .footer-info a {
+            color: var(--primary-foreground);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .footer-info a:hover {
+            text-decoration: underline;
+            color: var(--accent-light);
+        }
+
+        /* Aviso de privacidade */
+        .privacy-notice {
+            background: rgba(255, 255, 255, 0.1);
+            border-left: 4px solid var(--accent);
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 0.375rem;
+            text-align: center;
+            font-size: 0.8rem;
+            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .privacy-notice strong {
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 1rem;
+            padding: 1rem 1.5rem;
+            background: var(--foreground);
+            color: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            z-index: 1000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: var(--transition);
+            max-width: 90%;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .logo {
+                height: 4rem;
+            }
+            
+            .header-content {
+                flex-direction: row;
+                gap: 0.5rem;
+            }
+            
+            .share-btn {
+                position: relative;
+                right: 0;
+                top: 0;
+                margin-left: auto;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            fieldset {
+                padding: 1.25rem;
+            }
+            
+            .social-links {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.5rem;
+            }
+        }
+
+        /* Loading animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Floating button */
+        .fab {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: var(--shadow-lg);
+            cursor: pointer;
+            z-index: 100;
+            transition: var(--transition);
+            opacity: 0;
+            transform: scale(0);
+        }
+
+        .fab.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4);
+        }
+
+        /* Progress indicator (opcional) */
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .progress-steps::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--muted);
+            z-index: 1;
+            transform: translateY(-50%);
+        }
+
+        .progress-step {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--background);
+            border: 2px solid var(--muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: var(--muted-foreground);
+            z-index: 2;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .progress-step.active {
+            border-color: var(--accent);
+            background: var(--accent);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header com logo -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <!-- Logo PNG do GitHub -->
+                <img src="https://raw.githubusercontent.com/DavissonCoelho/appsdooleosorocaba/main/dooleologo.png" alt="Do Óleo Sorocaba" class="logo">
+                <!-- Botão de compartilhar sem contorno -->
+                <button type="button" class="share-btn" onclick="shareApp()" title="Compartilhar">
+                    <i class="fas fa-share-alt"></i>
+                </button>
+            </div>
+            <p class="header-text">Solicite seu orçamento de forma rápida e fácil</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            <div class="form-wrapper">
+                <!-- Trust Badge -->
+                <div class="trust-badge">
+                    <p><span class="checkmark">✓</span> Você está fazendo a melhor escolha ao confiar na <strong>Do Óleo Sorocaba</strong></p>
+                </div>
+
+                <!-- Form -->
+                <form id="budgetForm">
+                    <!-- Vehicle Information -->
+                    <fieldset>
+                        <legend><i class="fas fa-car"></i> 1. Informações do Veículo</legend>
+                        <p class="fieldset-description">Informe a placa ou os dados do veículo (obrigatório para todos os serviços)</p>
+
+                        <!-- Carros na Web Button -->
+                        <button type="button" class="carros-na-web-btn" onclick="window.open('https://www.carrosnaweb.com.br/avancada.asp', '_blank')">
+                            <i class="fas fa-search"></i>
+                            Consultar Dados do Veículo no Carros na Web
+                        </button>
+
+                        <!-- License Plate -->
+                        <div class="form-group">
+                            <label for="licensePlate">Placa do Veículo <span class="optional">(opcional)</span></label>
+                            <input type="text" id="licensePlate" name="licensePlate" 
+                                   placeholder="Ex: ABC-1234" maxlength="8"
+                                   oninput="this.value = this.value.toUpperCase()">
+                            <p class="input-hint">
+                                <i class="fas fa-info-circle"></i>
+                                Se informar a placa, os outros dados são opcionais
+                            </p>
+                        </div>
+
+                        <!-- Brand -->
+                        <div class="form-group">
+                            <label for="brand">Marca do Veículo <span id="brand-required" class="required">*</span></label>
+                            <input type="text" id="brand" name="brand" placeholder="Ex: Toyota, Honda, Volkswagen">
+                            <div id="error-brand" class="error-message"></div>
+                        </div>
+
+                        <!-- Model -->
+                        <div class="form-group">
+                            <label for="model">Modelo do Veículo <span id="model-required" class="required">*</span></label>
+                            <input type="text" id="model" name="model" placeholder="Ex: Corolla, Civic, Gol">
+                            <div id="error-model" class="error-message"></div>
+                        </div>
+
+                        <!-- Displacement -->
+                        <div class="form-group">
+                            <label for="displacement">Motorização <span id="displacement-required" class="required">*</span></label>
+                            <input type="text" id="displacement" name="displacement" placeholder="Ex: 1.0, 1.3, 1.4, 1.6, 2.0">
+                            <div id="error-displacement" class="error-message"></div>
+                        </div>
+
+                        <!-- Turbo -->
+                        <div class="form-group">
+                            <label>Turbo <span class="optional">(opcional)</span></label>
+                            <div class="checkbox-group">
+                                <div class="checkbox-option" onclick="toggleTurbo('yes')">
+                                    <input type="checkbox" id="turbo-yes" name="turbo" value="Sim">
+                                    <label for="turbo-yes">
+                                        <i class="fas fa-tachometer-alt service-icon"></i>
+                                        Sim
+                                    </label>
+                                </div>
+
+                                <div class="checkbox-option" onclick="toggleTurbo('no')">
+                                    <input type="checkbox" id="turbo-no" name="turbo" value="Não">
+                                    <label for="turbo-no">
+                                        <i class="fas fa-times service-icon"></i>
+                                        Não
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Year of Manufacture -->
+                        <div class="form-group">
+                            <label for="yearManufacture">Ano de Fabricação <span id="yearManufacture-required" class="required">*</span></label>
+                            <input type="number" id="yearManufacture" name="yearManufacture" placeholder="Ex: 2020" min="1990" max="2099">
+                            <div id="error-yearManufacture" class="error-message"></div>
+                        </div>
+
+                        <!-- Year of Model -->
+                        <div class="form-group">
+                            <label for="yearModel">Ano do Modelo <span id="yearModel-required" class="required">*</span></label>
+                            <input type="number" id="yearModel" name="yearModel" placeholder="Ex: 2020" min="1990" max="2100">
+                            <div id="error-yearModel" class="error-message"></div>
+                        </div>
+                    </fieldset>
+
+                    <!-- Service Type -->
+                    <fieldset>
+                        <legend><i class="fas fa-concierge-bell"></i> 2. Tipo de Serviço</legend>
+                        <p class="fieldset-description">Selecione uma ou mais opções</p>
+                        
+                        <div class="checkbox-group">
+                            <div class="checkbox-option" onclick="toggleServiceOption(this, 'transmission')">
+                                <input type="checkbox" id="service-transmission" name="serviceType" value="transmission">
+                                <label for="service-transmission">
+                                    <i class="fas fa-cogs service-icon"></i>
+                                    Troca de Fluído de Câmbio Automático
+                                </label>
+                            </div>
+							
+                            <div class="checkbox-option" onclick="toggleServiceOption(this, 'oil')">
+                                <input type="checkbox" id="service-oil" name="serviceType" value="oil">
+                                <label for="service-oil">
+                                    <i class="fas fa-oil-can service-icon"></i>
+                                    Troca de Óleo + Filtros
+                                </label>
+                            </div>							
+							
+                            <div class="checkbox-option" onclick="toggleServiceOption(this, 'arrefecimento')">
+                                <input type="checkbox" id="service-arrefecimento" name="serviceType" value="arrefecimento">
+                                <label for="service-arrefecimento">
+                                    <i class="fas fa-temperature-low service-icon"></i>
+                                    Limpeza Sistema Arrefecimento
+                                </label>
+                            </div>							
+
+                            <div class="checkbox-option" onclick="toggleServiceOption(this, 'both')">
+                                <input type="checkbox" id="service-both" name="serviceType" value="both">
+                                <label for="service-both">
+                                    <i class="fas fa-car-crash service-icon"></i>
+                                    Limpeza Sistema de Freios
+                                </label>
+                            </div>
+                            
+                            <!-- Novas opções de serviço -->
+                            <div class="checkbox-option" onclick="toggleServiceOption(this, 'disco-dianteiras')">
+                                <input type="checkbox" id="service-disco-dianteiras" name="serviceType" value="disco-dianteiras">
+                                <label for="service-disco-dianteiras">
+                                    <i class="fas fa-braille service-icon"></i>
+                                    Troca de Disco e Pastilhas Dianteiras
+                                </label>
+                            </div>
+                            
+                            <div class="checkbox-option" onclick="toggleServiceOption(this, 'disco-traseiras')">
+                                <input type="checkbox" id="service-disco-traseiras" name="serviceType" value="disco-traseiras">
+                                <label for="service-disco-traseiras">
+                                    <i class="fas fa-braille service-icon"></i>
+                                    Troca de Disco e Pastilhas Traseiras
+                                </label>
+                            </div>
+                            
+                            <div class="checkbox-option" onclick="toggleServiceOption(this, 'bieletas-dianteiras')">
+                                <input type="checkbox" id="service-bieletas-dianteiras" name="serviceType" value="bieletas-dianteiras">
+                                <label for="service-bieletas-dianteiras">
+                                    <i class="fas fa-link service-icon"></i>
+                                    Troca das Bieletas Dianteiras
+                                </label>
+                            </div>
+                            
+                            <div class="checkbox-option" onclick="toggleServiceOption(this, 'pastilhas-dianteiras')">
+                                <input type="checkbox" id="service-pastilhas-dianteiras" name="serviceType" value="pastilhas-dianteiras">
+                                <label for="service-pastilhas-dianteiras">
+                                    <i class="fas fa-stop service-icon"></i>
+                                    Troca das Pastilhas Dianteiras
+                                </label>
+                            </div>
+                            
+                            <div class="checkbox-option" onclick="toggleServiceOption(this, 'pastilhas-traseiras')">
+                                <input type="checkbox" id="service-pastilhas-traseiras" name="serviceType" value="pastilhas-traseiras">
+                                <label for="service-pastilhas-traseiras">
+                                    <i class="fas fa-stop service-icon"></i>
+                                    Troca das Pastilhas Traseiras
+                                </label>
+                            </div>
+                            
+                            <div class="checkbox-option" onclick="toggleServiceOption(this, 'lonas-traseiras')">
+                                <input type="checkbox" id="service-lonas-traseiras" name="serviceType" value="lonas-traseiras">
+                                <label for="service-lonas-traseiras">
+                                    <i class="fas fa-drum service-icon"></i>
+                                    Troca das Lonas Traseiras
+                                </label>
+                            </div>
+                        </div>
+                        <div id="error-serviceType" class="error-message"></div>
+                    </fieldset>
+
+                    <!-- Oil Type - Initially hidden -->
+                    <fieldset id="oilTypeSection" class="oil-type-section">
+                        <legend><i class="fas fa-oil-can"></i> 3. Preferência de Óleo</legend>
+                        <p class="fieldset-description">Selecione uma das opções (somente para Troca de Óleo + Filtros)</p>
+
+                        <div class="checkbox-group">
+                            <div class="checkbox-option" onclick="toggleOilOption(this, 'mineral')">
+                                <input type="checkbox" id="oil-mineral" name="oilType" value="mineral">
+                                <label for="oil-mineral">
+                                    <i class="fas fa-tint service-icon"></i>
+                                    Mineral
+                                </label>
+                            </div>
+
+                            <div class="checkbox-option" onclick="toggleOilOption(this, 'semi')">
+                                <input type="checkbox" id="oil-semi" name="oilType" value="semi">
+                                <label for="oil-semi">
+                                    <i class="fas fa-tint service-icon"></i>
+                                    Semissintético
+                                </label>
+                            </div>
+
+                            <div class="checkbox-option" onclick="toggleOilOption(this, 'synthetic')">
+                                <input type="checkbox" id="oil-synthetic" name="oilType" value="synthetic">
+                                <label for="oil-synthetic">
+                                    <i class="fas fa-tint service-icon"></i>
+                                    Sintético
+                                </label>
+                            </div>
+
+                            <div class="checkbox-option checked" onclick="toggleOilOption(this, 'Indique-me a melhor opção')">
+                                <input type="checkbox" id="oil-recommend" name="oilType" value="Indique-me a melhor opção" checked>
+                                <label for="oil-recommend">
+                                    <i class="fas fa-star service-icon"></i>
+                                    Indique-me a melhor opção
+                                </label>
+                            </div>
+                        </div>
+                        <div id="error-oilType" class="error-message"></div>
+                    </fieldset>
+
+                    <!-- Action Buttons -->
+                    <div class="button-group">
+                        <button type="submit" class="btn-primary" id="submitBtn">
+                            <i class="fas fa-paper-plane"></i>
+                            Enviar Orçamento
+                        </button>
+                        <button type="button" class="btn-secondary" onclick="resetForm()">
+                            <i class="fas fa-redo"></i>
+                            Cancelar
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Success State -->
+                <div class="success-container" id="successContainer">
+                    <div class="success-box">
+                        <div class="success-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h2>Obrigado!</h2>
+                        <p>Sua solicitação de orçamento foi enviada com sucesso para a Do Óleo Sorocaba via WhatsApp.</p>
+                        <p>Em breve, nosso time entrará em contato com você para confirmar os detalhes e fornecer o orçamento.</p>
+                    </div>
+
+                    <div class="button-group" style="border-top: none; padding-top: 0; margin-top: 0;">
+                        <button type="button" class="btn-primary" onclick="newQuery()">
+                            <i class="fas fa-plus-circle"></i>
+                            Nova Consulta
+                        </button>
+                        <button type="button" class="btn-secondary" onclick="exitApp()">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Sair
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Floating Action Button -->
+    <div class="fab" id="fab" onclick="scrollToTop()">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Mensagem enviada!</span>
+    </div>
+
+    <!-- Footer com todas as informações -->
+    <footer>
+        <div class="container">
+            <h3>Conecte-se com a Do Óleo Sorocaba</h3>
+
+            <!-- Ícones de redes sociais COM SÍMBOLOS CORRETOS -->
+            <div class="social-links">
+                <a href="https://instagram.com/dooleosorocaba" target="_blank" rel="noopener noreferrer" class="social-link instagram">
+                    <span class="social-icon"><i class="fab fa-instagram"></i></span>
+                    <span>Instagram</span>
+                </a>
+
+                <a href="https://facebook.com/dooleosorocaba" target="_blank" rel="noopener noreferrer" class="social-link facebook">
+                    <span class="social-icon"><i class="fab fa-facebook-f"></i></span>
+                    <span>Facebook</span>
+                </a>
+
+                <a href="https://www.dooleosorocaba.com.br" target="_blank" rel="noopener noreferrer" class="social-link website">
+                    <span class="social-icon"><i class="fas fa-globe"></i></span>
+                    <span>Website</span>
+                </a>
+
+                <a href="https://wa.me/5515998473981" target="_blank" rel="noopener noreferrer" class="social-link whatsapp">
+                    <span class="social-icon"><i class="fab fa-whatsapp"></i></span>
+                    <span>WhatsApp</span>
+                </a>
+            </div>
+
+            <!-- Aviso de Privacidade -->
+            <div class="privacy-notice">
+                <strong>A Do Óleo Sorocaba, não pede nome, usuário, senha ou dados do seu SmartPhone, o APP não envia códigos de confirmação e mails para seu endereço. Respeitamos Totalmente a Privacidade de Nossos Clientes.</strong>
+            </div>
+
+            <!-- Google Maps -->
+            <div class="map-container">
+                <iframe width="100%" height="300" style="border:0; border-radius: 0.375rem;" loading="lazy" allowfullscreen="" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3710.0123456789!2d-47.4567!3d-23.5000!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94c5a1b1b1b1b1b1%3A0x1b1b1b1b1b1b1b1b!2sRua%20Comendador%20Hermelino%20Matarazzo%2C%20287%20-%20Sorocaba%2C%20SP!5e0!3m2!1spt-BR!2sbr!4v1234567890"></iframe>
+            </div>
+
+            <div class="footer-info">
+                <p>Do Óleo Sorocaba © <span id="year"></span> - Todos os direitos reservados</p>
+                <p>Rua Comendador Hermelino Matarazzo, 287 - Esquina com a Mascarenhas Camelo</p>
+                <p>Telefone: <a href="tel:+5515998473981">+55 (15) 99847-3981</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Share function
+        function shareApp() {
+            const url = window.location.href;
+            const text = "Solicite seu orçamento na Do Óleo Sorocaba! Clique aqui: ";
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: "Do Óleo Sorocaba",
+                    text: text,
+                    url: url,
+                }).then(() => {
+                    showToast('Compartilhado com sucesso!');
+                }).catch(err => console.log("Erro ao compartilhar:", err));
+            } else {
+                window.open(`https://wa.me/?text=${encodeURIComponent(text + url)}`, "_blank");
+                showToast('Abrindo WhatsApp para compartilhar...');
+            }
+        }
+
+        // Toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Set current year
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Form state
+        const form = document.getElementById('budgetForm');
+        const successContainer = document.getElementById('successContainer');
+        const oilTypeSection = document.getElementById('oilTypeSection');
+        const fab = document.getElementById('fab');
+        const formInputs = {
+            serviceTypes: [],
+            licensePlate: '',
+            brand: '',
+            model: '',
+            displacement: '',
+            turbo: '',
+            yearManufacture: '',
+            yearModel: '',
+            oilType: 'Indique-me a melhor opção'
+        };
+
+        // Selected services array
+        const selectedServices = [];
+
+        // Toggle service option with visual feedback
+        function toggleServiceOption(element, value) {
+            const checkbox = element.querySelector('input[type="checkbox"]');
+            checkbox.checked = !checkbox.checked;
+            
+            if (checkbox.checked) {
+                element.classList.add('checked');
+                if (!selectedServices.includes(value)) {
+                    selectedServices.push(value);
+                }
+            } else {
+                element.classList.remove('checked');
+                const index = selectedServices.indexOf(value);
+                if (index > -1) {
+                    selectedServices.splice(index, 1);
+                }
+            }
+            
+            formInputs.serviceTypes = [...selectedServices];
+            
+            // Check if "Troca de Óleo + Filtros" is selected
+            const hasOilService = selectedServices.includes('oil');
+            
+            if (hasOilService) {
+                oilTypeSection.classList.add('visible');
+            } else {
+                oilTypeSection.classList.remove('visible');
+                formInputs.oilType = 'Indique-me a melhor opção';
+                document.getElementById('oil-recommend').checked = true;
+                
+                // Reset all oil options
+                document.querySelectorAll('.checkbox-option').forEach(option => {
+                    if (option.querySelector('input[name="oilType"]')) {
+                        option.classList.remove('checked');
+                    }
+                });
+                
+                // Keep only the recommended option checked
+                document.querySelector('.checkbox-option[onclick*="Indique-me a melhor opção"]').classList.add('checked');
+            }
+            
+            clearError('serviceType');
+            
+            // Add visual feedback
+            element.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                element.style.transform = '';
+            }, 150);
+        }
+
+        // Toggle oil option
+        function toggleOilOption(element, value) {
+            const checkbox = element.querySelector('input[type="checkbox"]');
+            
+            // Uncheck all oil options first
+            document.querySelectorAll('input[name="oilType"]').forEach(input => {
+                input.checked = false;
+                const parent = input.closest('.checkbox-option');
+                if (parent) parent.classList.remove('checked');
+            });
+            
+            // Check the selected one
+            checkbox.checked = true;
+            element.classList.add('checked');
+            formInputs.oilType = value;
+            
+            clearError('oilType');
+        }
+
+        // Toggle turbo option
+        function toggleTurbo(value) {
+            const yesCheckbox = document.getElementById('turbo-yes');
+            const noCheckbox = document.getElementById('turbo-no');
+            const yesOption = yesCheckbox.closest('.checkbox-option');
+            const noOption = noCheckbox.closest('.checkbox-option');
+            
+            if (value === 'yes') {
+                yesCheckbox.checked = true;
+                noCheckbox.checked = false;
+                yesOption.classList.add('checked');
+                noOption.classList.remove('checked');
+                formInputs.turbo = 'Sim';
+            } else {
+                yesCheckbox.checked = false;
+                noCheckbox.checked = true;
+                yesOption.classList.remove('checked');
+                noOption.classList.add('checked');
+                formInputs.turbo = 'Não';
+            }
+        }
+
+        // Handle text inputs
+        document.getElementById('licensePlate').addEventListener('input', (e) => {
+            formInputs.licensePlate = e.target.value.toUpperCase();
+            updateRequiredFields();
+        });
+
+        // Add event listeners for validation feedback
+        const fields = ['brand', 'model', 'displacement', 'yearManufacture', 'yearModel'];
+        fields.forEach(field => {
+            const input = document.getElementById(field);
+            input.addEventListener('blur', () => {
+                if (!formInputs.licensePlate && !input.value.trim()) {
+                    showError(field, `Este campo é obrigatório`);
+                }
+            });
+            input.addEventListener('input', () => {
+                formInputs[field] = input.value;
+                if (input.value.trim()) {
+                    clearError(field);
+                    input.style.borderColor = 'var(--accent)';
+                } else {
+                    input.style.borderColor = '';
+                }
+            });
+        });
+
+        // Update required fields based on license plate
+        function updateRequiredFields() {
+            const isPlateProvided = !!formInputs.licensePlate;
+            fields.forEach(field => {
+                const input = document.getElementById(field);
+                const requiredSpan = document.getElementById(`${field}-required`);
+                
+                if (isPlateProvided) {
+                    input.disabled = true;
+                    input.style.background = 'var(--muted)';
+                    requiredSpan.style.display = 'none';
+                } else {
+                    input.disabled = false;
+                    input.style.background = '';
+                    requiredSpan.style.display = 'inline';
+                }
+            });
+        }
+
+        // Validation
+        function validateForm() {
+            const errors = {};
+            let isValid = true;
+
+            // Vehicle information validation
+            if (!formInputs.licensePlate) {
+                if (!formInputs.brand.trim()) {
+                    errors.brand = 'Marca é obrigatória sem placa';
+                    isValid = false;
+                }
+                if (!formInputs.model.trim()) {
+                    errors.model = 'Modelo é obrigatório sem placa';
+                    isValid = false;
+                }
+                if (!formInputs.displacement.trim()) {
+                    errors.displacement = 'Motorização é obrigatória sem placa';
+                    isValid = false;
+                }
+                if (!formInputs.yearManufacture) {
+                    errors.yearManufacture = 'Ano de fabricação é obrigatório sem placa';
+                    isValid = false;
+                }
+                if (!formInputs.yearModel) {
+                    errors.yearModel = 'Ano do modelo é obrigatório sem placa';
+                    isValid = false;
+                }
+            }
+
+            // Service type validation
+            if (formInputs.serviceTypes.length === 0) {
+                errors.serviceType = 'Selecione pelo menos um tipo de serviço';
+                isValid = false;
+            }
+
+            // Oil type validation
+            const hasOilService = formInputs.serviceTypes.includes('oil');
+            if (hasOilService && !formInputs.oilType) {
+                errors.oilType = 'Selecione uma preferência de óleo';
+                isValid = false;
+            }
+
+            // Display errors
+            Object.keys(errors).forEach(field => {
+                showError(field, errors[field]);
+            });
+
+            return isValid;
+        }
+
+        function showError(field, message) {
+            const errorElement = document.getElementById(`error-${field}`);
+            if (errorElement) {
+                errorElement.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+                const input = document.getElementById(field);
+                if (input) {
+                    input.style.borderColor = 'var(--destructive)';
+                }
+            }
+        }
+
+        function clearError(field) {
+            const errorElement = document.getElementById(`error-${field}`);
+            if (errorElement) {
+                errorElement.textContent = '';
+                const input = document.getElementById(field);
+                if (input) {
+                    input.style.borderColor = '';
+                }
+            }
+        }
+
+        // Format message for WhatsApp
+        function formatMessage() {
+            const serviceMap = {
+                transmission: 'Troca de Fluído de Câmbio Automático',
+                oil: 'Troca de Óleo + Filtros',
+                arrefecimento: 'Limpeza Sistema Arrefecimento',
+                both: 'Limpeza Sistema de Freios',
+                'disco-dianteiras': 'Troca de Disco e Pastilhas Dianteiras',
+                'disco-traseiras': 'Troca de Disco e Pastilhas Traseiras',
+                'bieletas-dianteiras': 'Troca das Bieletas Dianteiras',
+                'pastilhas-dianteiras': 'Troca das Pastilhas Dianteiras',
+                'pastilhas-traseiras': 'Troca das Pastilhas Traseiras',
+                'lonas-traseiras': 'Troca das Lonas Traseiras'
+            };
+
+            const oilTypeMap = {
+                mineral: 'Mineral',
+                semi: 'Semissintético',
+                synthetic: 'Sintético',
+                'Indique-me a melhor opção': 'Indique-me a melhor opção'
+            };
+
+            const vehicleInfo = formInputs.licensePlate
+                ? `Placa: ${formInputs.licensePlate}`
+                : `Marca: ${formInputs.brand} | Modelo: ${formInputs.model} | Motorização: ${formInputs.displacement} | Turbo: ${formInputs.turbo || 'Não informado'} | Ano Fabricação: ${formInputs.yearManufacture} | Ano Modelo: ${formInputs.yearModel}`;
+
+            // Formatar serviços selecionados
+            let servicesText = '';
+            if (formInputs.serviceTypes.length === 1) {
+                servicesText = serviceMap[formInputs.serviceTypes[0]];
+            } else {
+                servicesText = formInputs.serviceTypes.map(service => `• ${serviceMap[service]}`).join('\n');
+            }
+
+            let message = `🚗 *SOLICITAÇÃO DE ORÇAMENTO - Do Óleo Sorocaba*\n\n`;
+            message += `*Serviços Solicitados:*\n${servicesText}\n\n`;
+            message += `*Informações do Veículo:*\n${vehicleInfo}`;
+
+            // Adicionar preferência de óleo
+            const hasOilService = formInputs.serviceTypes.includes('oil');
+            if (hasOilService) {
+                message += `\n\n*Preferência de Óleo:* ${oilTypeMap[formInputs.oilType] || 'Indique-me a melhor opção'}`;
+            }
+
+            message += `\n\n📍 *Localização:* Rua Comendador Hermelino Matarazzo, 287 - Sorocaba/SP\n`;
+            message += `📱 *Contato:* (15) 99847-3981\n\n`;
+            message += `Obrigado! Aguardo o retorno.`;
+
+            return message;
+        }
+
+        // Form submission with loading state
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (!validateForm()) {
+                showToast('Por favor, corrija os erros no formulário');
+                return;
+            }
+
+            const submitBtn = document.getElementById('submitBtn');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<div class="loading"></div> Enviando...';
+            submitBtn.disabled = true;
+
+            // Simulate API call delay
+            await new Promise(resolve => setTimeout(resolve, 1500));
+
+            const message = formatMessage();
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/5515998473981?text=${encodedMessage}`;
+
+            // Open WhatsApp
+            window.open(whatsappUrl, '_blank');
+
+            // Show success state
+            form.classList.add('hidden');
+            successContainer.classList.add('active');
+            
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+            
+            showToast('Orçamento enviado com sucesso!');
+            scrollToTop();
+        });
+
+        // Reset form
+        function resetForm() {
+            form.reset();
+            formInputs.serviceTypes = [];
+            formInputs.licensePlate = '';
+            formInputs.brand = '';
+            formInputs.model = '';
+            formInputs.displacement = '';
+            formInputs.turbo = '';
+            formInputs.yearManufacture = '';
+            formInputs.yearModel = '';
+            formInputs.oilType = 'Indique-me a melhor opção';
+
+            // Reset selected services array
+            selectedServices.length = 0;
+
+            // Reset UI
+            document.querySelectorAll('.checkbox-option').forEach(option => {
+                option.classList.remove('checked');
+            });
+            
+            // Set default oil option
+            document.querySelector('.checkbox-option[onclick*="Indique-me a melhor opção"]').classList.add('checked');
+            document.getElementById('oil-recommend').checked = true;
+
+            // Hide oil type section
+            oilTypeSection.classList.remove('visible');
+
+            // Clear all errors
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.textContent = '';
+            });
+
+            updateRequiredFields();
+            
+            showToast('Formulário reiniciado');
+            scrollToTop();
+        }
+
+        // New query
+        function newQuery() {
+            form.classList.remove('hidden');
+            successContainer.classList.remove('active');
+            resetForm();
+            scrollToTop();
+            showToast('Pronto para nova consulta!');
+        }
+
+        // Exit app
+        function exitApp() {
+            window.location.href = 'https://www.dooleosorocaba.com.br';
+        }
+
+        // Scroll to top
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // Show/hide FAB based on scroll position
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                fab.classList.add('visible');
+            } else {
+                fab.classList.remove('visible');
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            updateRequiredFields();
+        });
+    </script>
+</body>
+</html>
