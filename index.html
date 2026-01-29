@@ -464,12 +464,24 @@
             display: block;
         }
 
-        /* Carros na Web button melhorado */
-        .carros-na-web-btn {
+        /* Container para os botões de consulta */
+        .consult-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .consult-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Botões de consulta */
+        .consult-btn {
             width: 100%;
             padding: 1rem;
-            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-            color: #ffffff;
             border: none;
             border-radius: var(--radius);
             font-family: 'Inter', sans-serif;
@@ -481,18 +493,151 @@
             align-items: center;
             justify-content: center;
             gap: 0.75rem;
-            margin-bottom: 1.5rem;
             box-shadow: var(--shadow-md);
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .consult-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .carros-na-web-btn {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: #ffffff;
         }
 
         .carros-na-web-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
             background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
         }
 
-        .carros-na-web-btn i {
+        .fipe-btn {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            color: #ffffff;
+        }
+
+        .fipe-btn:hover {
+            background: linear-gradient(135deg, #047857 0%, #065f46 100%);
+        }
+
+        .consult-btn i {
             font-size: 1.1rem;
+        }
+
+        /* Modal de confirmação */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--background);
+            border-radius: var(--radius);
+            width: 90%;
+            max-width: 500px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            animation: scaleUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-origin: center;
+        }
+
+        @keyframes scaleUp {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+        }
+
+        .modal-header h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-body p {
+            margin-bottom: 1.5rem;
+            color: var(--foreground);
+            line-height: 1.6;
+        }
+
+        .modal-body .warning {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            color: #92400e;
+            padding: 1rem;
+            border-radius: 0.375rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .modal-body .warning i {
+            color: #f59e0b;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .modal-footer {
+            padding: 1.5rem;
+            background: var(--secondary);
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        .modal-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: var(--radius);
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            min-width: 120px;
+        }
+
+        .modal-btn.cancel {
+            background: var(--muted);
+            color: var(--foreground);
+        }
+
+        .modal-btn.cancel:hover {
+            background: #e5e7eb;
+        }
+
+        .modal-btn.confirm {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: white;
+        }
+
+        .modal-btn.confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
         }
 
         /* Submit button melhorado */
@@ -1232,11 +1377,20 @@
                         </fieldset>
                     </div>
 
-                    <!-- Carros na Web Link -->
-                    <a href="https://www.carrosnaweb.com.br" target="_blank" rel="noopener noreferrer" class="carros-na-web-btn">
-                        <i class="fas fa-search"></i>
-                        Não sabe os dados? Consulte no Carros na Web
-                    </a>
+                    <!-- Container para os botões de consulta -->
+                    <div class="consult-buttons">
+                        <!-- Botão Carros na Web -->
+                        <button type="button" class="consult-btn carros-na-web-btn" onclick="confirmRedirect('carros-na-web')">
+                            <i class="fas fa-search"></i>
+                            Não sabe os dados?<br>Consulte no Carros na Web
+                        </button>
+
+                        <!-- Botão FIPE -->
+                        <button type="button" class="consult-btn fipe-btn" onclick="confirmRedirect('fipe')">
+                            <i class="fas fa-chart-line"></i>
+                            Consulte também na<br>Tabela FIPE
+                        </button>
+                    </div>
 
                     <!-- Submit Button -->
                     <button type="submit" class="submit-btn" id="submitBtn">
@@ -1265,6 +1419,32 @@
             </div>
         </div>
     </main>
+
+    <!-- Modal de Confirmação -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-external-link-alt"></i> Redirecionamento para Site Externo</h3>
+            </div>
+            <div class="modal-body">
+                <p>Você está sendo redirecionado para um site externo. Por favor, confirme se deseja continuar.</p>
+                
+                <div class="warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div>
+                        <strong>Atenção:</strong> Este site não é afiliado à Do Óleo Sorocaba e pode conter anúncios ou conteúdo de terceiros. A Do Óleo Sorocaba não se responsabiliza pelo conteúdo ou serviços oferecidos neste site externo.
+                    </div>
+                </div>
+                
+                <p><strong>Site de destino:</strong> <span id="modalSiteName"></span></p>
+                <p><strong>URL:</strong> <span id="modalUrl" style="word-break: break-all; font-size: 0.9rem;"></span></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="modal-btn cancel" onclick="cancelRedirect()">Cancelar</button>
+                <button type="button" class="modal-btn confirm" onclick="proceedRedirect()">Continuar</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Floating Action Button -->
     <button class="fab" id="fab" onclick="scrollToTop()" title="Voltar ao topo">
@@ -1344,6 +1524,13 @@
         const freioOptions = document.getElementById('freioOptions');
         const fab = document.getElementById('fab');
         const yearSpan = document.getElementById('year');
+        
+        // Variáveis para redirecionamento
+        let pendingRedirect = {
+            siteName: '',
+            url: '',
+            type: ''
+        };
         
         // Set current year
         if (yearSpan) yearSpan.textContent = new Date().getFullYear();
@@ -1895,6 +2082,69 @@
                 fab.classList.add('visible');
             } else {
                 fab.classList.remove('visible');
+            }
+        });
+
+        // Funções para redirecionamento com confirmação
+        function confirmRedirect(type) {
+            if (type === 'carros-na-web') {
+                pendingRedirect = {
+                    siteName: 'Carros na Web',
+                    url: 'https://www.carrosnaweb.com.br',
+                    type: 'carros-na-web'
+                };
+            } else if (type === 'fipe') {
+                pendingRedirect = {
+                    siteName: 'Tabela FIPE Oficial',
+                    url: 'https://veiculos.fipe.org.br/',
+                    type: 'fipe'
+                };
+            }
+            
+            // Atualizar informações no modal
+            document.getElementById('modalSiteName').textContent = pendingRedirect.siteName;
+            document.getElementById('modalUrl').textContent = pendingRedirect.url;
+            
+            // Mostrar o modal
+            document.getElementById('confirmModal').classList.add('active');
+        }
+
+        function cancelRedirect() {
+            // Fechar o modal
+            document.getElementById('confirmModal').classList.remove('active');
+            
+            // Limpar informações pendentes
+            pendingRedirect = {
+                siteName: '',
+                url: '',
+                type: ''
+            };
+            
+            showToast('Redirecionamento cancelado');
+        }
+
+        function proceedRedirect() {
+            // Fechar o modal
+            document.getElementById('confirmModal').classList.remove('active');
+            
+            // Executar redirecionamento
+            if (pendingRedirect.url) {
+                window.open(pendingRedirect.url, '_blank', 'noopener,noreferrer');
+                showToast(`Redirecionando para ${pendingRedirect.siteName}`);
+            }
+            
+            // Limpar informações pendentes
+            pendingRedirect = {
+                siteName: '',
+                url: '',
+                type: ''
+            };
+        }
+
+        // Fechar modal ao clicar fora
+        document.getElementById('confirmModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                cancelRedirect();
             }
         });
 
