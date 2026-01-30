@@ -892,6 +892,48 @@
             color: var(--accent-light);
         }
 
+        /* Nova frase de valores - VERMELHO BERRANTE! */
+        .values-phrase {
+            margin: 1.5rem 0;
+            text-align: center;
+            padding: 1.2rem;
+            background: rgba(255, 0, 0, 0.15);
+            border-radius: var(--radius);
+            border: 2px solid #ff0000;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 25px rgba(255, 0, 0, 0.7);
+            }
+            100% {
+                box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
+            }
+        }
+
+        .values-phrase p {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #ff0000;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.5),
+                         0 0 20px rgba(255, 0, 0, 0.3),
+                         0 0 30px rgba(255, 0, 0, 0.2);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Efeito de brilho no texto */
+        .values-phrase p::selection {
+            background: #ff0000;
+            color: white;
+        }
+
         /* Aviso de privacidade */
         .privacy-notice {
             background: rgba(255, 255, 255, 0.1);
@@ -1010,6 +1052,15 @@
             
             .freio-checkbox-group {
                 flex-direction: column;
+            }
+            
+            .values-phrase p {
+                font-size: 1.1rem;
+            }
+            
+            .values-phrase {
+                padding: 1rem;
+                margin: 1rem 0;
             }
         }
 
@@ -1183,12 +1234,12 @@
                     <!-- Vehicle Information -->
                     <fieldset>
                         <legend><i class="fas fa-car"></i> 1. Informações do Veículo</legend>
-                        <p class="fieldset-description">Informe a placa ou os dados do veículo</p>
+                        <p class="fieldset-description">Informe a placa ou os dados do veículo (obrigatório para todos os serviços)</p>
                         
                         <div class="form-group">
                             <label for="licensePlate">Placa do Veículo <span class="optional">(Opcional se preencher dados abaixo)</span></label>
                             <input type="text" id="licensePlate" placeholder="ABC-1D23 ou ABC-1234" maxlength="8" style="text-transform: uppercase;">
-                            <div class="input-hint"><i class="fas fa-info-circle"></i>Com a placa identificamos os dados do veículo</div>
+                            <div class="input-hint"><i class="fas fa-info-circle"></i> Informe a placa para preenchimento automático</div>
                             <div class="error-message" id="error-licensePlate"></div>
                         </div>
 
@@ -1496,6 +1547,12 @@
 
             <div class="footer-info">
                 <p>Do Óleo Sorocaba © <span id="year"></span> - Todos os direitos reservados</p>
+                
+                <!-- Nova frase de valores - VERMELHO BERRANTE! -->
+                <div class="values-phrase">
+                    <p>Transparência, Melhores Preços e Atendimento Humanizado</p>
+                </div>
+                
                 <p>Rua Comendador Hermelino Matarazzo, 287 - Esquina com a Mascarenhas Camelo</p>
                 <p>Telefone: <a href="tel:+5515998473981">+55 (15) 99847-3981</a></p>
             </div>
