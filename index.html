@@ -892,46 +892,48 @@
             color: var(--accent-light);
         }
 
-        /* Nova frase de valores - VERMELHO BERRANTE! */
+        /* Nova frase de valores - AJUSTADA PARA HARMONIA COM O APP */
         .values-phrase {
             margin: 1.5rem 0;
             text-align: center;
             padding: 1.2rem;
-            background: rgba(255, 0, 0, 0.15);
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(239, 68, 68, 0.08) 100%);
             border-radius: var(--radius);
-            border: 2px solid #ff0000;
-            box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
-            animation: pulse 2s infinite;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
         }
 
-        @keyframes pulse {
-            0% {
-                box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
-            }
-            50% {
-                box-shadow: 0 0 25px rgba(255, 0, 0, 0.7);
-            }
-            100% {
-                box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
-            }
+        .values-phrase:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(239, 68, 68, 0.5);
         }
 
         .values-phrase p {
-            font-size: 1.3rem;
-            font-weight: 800;
-            color: #ff0000;
-            text-shadow: 0 0 10px rgba(255, 0, 0, 0.5),
-                         0 0 20px rgba(255, 0, 0, 0.3),
-                         0 0 30px rgba(255, 0, 0, 0.2);
-            letter-spacing: 1px;
-            text-transform: uppercase;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #ef4444;
+            letter-spacing: 0.5px;
             font-family: 'Poppins', sans-serif;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
         }
 
-        /* Efeito de brilho no texto */
-        .values-phrase p::selection {
-            background: #ff0000;
-            color: white;
+        .values-phrase p::before,
+        .values-phrase p::after {
+            content: "✦";
+            color: rgba(239, 68, 68, 0.7);
+            font-size: 1rem;
+            animation: subtlePulse 2s infinite;
+        }
+
+        @keyframes subtlePulse {
+            0%, 100% { opacity: 0.7; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
         }
 
         /* Aviso de privacidade */
@@ -1055,12 +1057,14 @@
             }
             
             .values-phrase p {
-                font-size: 1.1rem;
+                font-size: 1rem;
+                gap: 0.5rem;
+                flex-direction: column;
             }
             
-            .values-phrase {
-                padding: 1rem;
-                margin: 1rem 0;
+            .values-phrase p::before,
+            .values-phrase p::after {
+                display: none;
             }
         }
 
@@ -1548,7 +1552,7 @@
             <div class="footer-info">
                 <p>Do Óleo Sorocaba © <span id="year"></span> - Todos os direitos reservados</p>
                 
-                <!-- Nova frase de valores - VERMELHO BERRANTE! -->
+                <!-- Nova frase de valores - HARMONIOSA COM O APP -->
                 <div class="values-phrase">
                     <p>Transparência, Melhores Preços e Atendimento Humanizado</p>
                 </div>
