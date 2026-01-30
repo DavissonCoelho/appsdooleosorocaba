@@ -41,6 +41,8 @@
             --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
             --radius: 0.5rem;
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --gold: linear-gradient(135deg, #FFD700 0%, #FFC107 100%);
+            --gold-light: linear-gradient(135deg, #FFECB3 0%, #FFF9C4 100%);
         }
 
         body {
@@ -94,6 +96,13 @@
             z-index: 2;
         }
 
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            flex: 1;
+        }
+
         .logo {
             height: 4.5rem;
             object-fit: contain;
@@ -105,9 +114,60 @@
             transform: translateY(-2px);
         }
 
+        /* Frases douradas ao lado do logo */
+        .golden-phrases {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            flex: 1;
+        }
+
+        .phrase {
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            background: var(--gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            letter-spacing: 0.5px;
+            position: relative;
+            padding-left: 1rem;
+            animation: fadeInPhrase 0.8s ease-out forwards;
+            opacity: 0;
+            transform: translateX(-10px);
+        }
+
+        .phrase::before {
+            content: '✦';
+            position: absolute;
+            left: 0;
+            background: var(--gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 0.8rem;
+        }
+
+        .phrase:nth-child(1) { animation-delay: 0.1s; }
+        .phrase:nth-child(2) { animation-delay: 0.3s; }
+        .phrase:nth-child(3) { animation-delay: 0.5s; }
+
+        @keyframes fadeInPhrase {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
         @media (min-width: 768px) {
             .logo {
                 height: 5.5rem;
+            }
+            
+            .phrase {
+                font-size: 1rem;
             }
         }
 
@@ -1275,6 +1335,21 @@
                 gap: 0.5rem;
             }
             
+            .logo-container {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            
+            .golden-phrases {
+                width: 100%;
+            }
+            
+            .phrase {
+                font-size: 0.8rem;
+                padding-left: 0.8rem;
+            }
+            
             .share-container {
                 align-items: flex-end;
             }
@@ -1325,6 +1400,18 @@
                 left: 15px;
             }
         }
+        
+        /* Ajustes para telas muito pequenas */
+        @media (max-width: 480px) {
+            .phrase {
+                font-size: 0.75rem;
+                padding-left: 0.7rem;
+            }
+            
+            .phrase::before {
+                font-size: 0.7rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1332,7 +1419,14 @@
     <header>
         <div class="container">
             <div class="header-content">
-                <img src="https://raw.githubusercontent.com/DavissonCoelho/appsdooleosorocaba/main/dooleologo.png" alt="Do Óleo Sorocaba" class="logo">
+                <div class="logo-container">
+                    <img src="https://raw.githubusercontent.com/DavissonCoelho/appsdooleosorocaba/main/dooleologo.png" alt="Do Óleo Sorocaba" class="logo">
+                    <div class="golden-phrases">
+                        <div class="phrase">Transparência</div>
+                        <div class="phrase">Atendimento humanizado</div>
+                        <div class="phrase">Melhores preços e as melhores marcas</div>
+                    </div>
+                </div>
                 <div class="share-container">
                     <div class="share-text">Compartilhe</div>
                     <button type="button" class="share-btn" onclick="shareApp()" title="Compartilhar">
