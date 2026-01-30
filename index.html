@@ -560,15 +560,6 @@
             pointer-events: none;
         }
 
-        /* Oil type section */
-        .oil-type-section {
-            display: none;
-        }
-
-        .oil-type-section.visible {
-            display: block;
-        }
-
         /* Container para os botões de consulta */
         .consult-buttons {
             display: grid;
@@ -1627,11 +1618,13 @@
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                                 <div class="form-group">
                                     <label for="clientName">Seu Nome <span class="optional">(Opcional)</span></label>
-                                    <input type="text" id="clientName" placeholder="COMO PREFERE SER CHAMADO">
+                                    <input type="text" id="clientName" placeholder="COMO PREFERE SER CHAMADO" maxlength="40">
+                                    <div class="input-hint"><i class="fas fa-info-circle"></i> Máximo de 40 caracteres</div>
                                 </div>
                                 <div class="form-group">
                                     <label for="clientPhone">Telefone <span class="optional">(Opcional)</span></label>
-                                    <input type="tel" id="clientPhone" placeholder="(11) 99999-9999">
+                                    <input type="tel" id="clientPhone" placeholder="(11) 99999-9999" maxlength="15">
+                                    <div class="input-hint"><i class="fas fa-info-circle"></i> Formato: (99) 99999-9999</div>
                                 </div>
                             </div>
                         </fieldset>
@@ -1869,7 +1862,6 @@
         const selectedServices = [];
         const form = document.getElementById('budgetForm');
         const successContainer = document.getElementById('successContainer');
-        const oilTypeSection = document.getElementById('oilTypeSection');
         const freioOptions = document.getElementById('freioOptions');
         const fab = document.getElementById('fab');
         const yearSpan = document.getElementById('year');
@@ -1881,25 +1873,77 @@
             type: ''
         };
 
-        // Current section
+        // Current section - SEMPRE INICIA NA SEÇÃO 1
         let currentSection = 1;
         const totalSections = 4;
 
         // Set current year
         if (yearSpan) yearSpan.textContent = new Date().getFullYear();
 
-        // Initialize form
+        // Initialize form - CORRIGIDO: SEMPRE INICIA NA PÁGINA 1
         document.addEventListener('DOMContentLoaded', () => {
+            // Garante que está na seção 1
+            resetFormToSection1();
             updateRequiredFields();
-            loadSavedForm();
+            loadSavedForm(); // Carrega dados, mas mantém na seção 1
             updateProgressIndicator();
             setupInputListeners();
         });
 
-        // Setup input listeners for uppercase conversion
+        // Função para garantir que o app sempre inicie na seção 1
+        function resetFormToSection1() {
+            // Esconde todas as seções
+            document.querySelectorAll('.form-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Mostra apenas a seção 1
+            document.getElementById('section1').classList.add('active');
+            
+            // Reseta o progresso
+            currentSection = 1;
+            
+            // Atualiza o indicador de progresso
+            updateProgressIndicator();
+        }
+
+        // Setup input listeners
         function setupInputListeners() {
+            // Campo de nome (40 caracteres max)
+            const clientNameInput = document.getElementById('clientName');
+            if (clientNameInput) {
+                clientNameInput.addEventListener('input', function(e) {
+                    let value = this.value.toUpperCase();
+                    if (value.length > 40) {
+                        value = value.substring(0, 40);
+                        showToast('Nome limitado a 40 caracteres');
+                    }
+                    this.value = value;
+                    formInputs.clientName = value;
+                    autoSaveForm();
+                });
+                
+                clientNameInput.addEventListener('blur', function() {
+                    this.value = this.value.toUpperCase();
+                    formInputs.clientName = this.value;
+                });
+            }
+
+            // Campo de telefone com formatação
+            const clientPhoneInput = document.getElementById('clientPhone');
+            if (clientPhoneInput) {
+                clientPhoneInput.addEventListener('input', function(e) {
+                    formatPhoneNumber(this);
+                    autoSaveForm();
+                });
+                
+                clientPhoneInput.addEventListener('blur', function() {
+                    validatePhoneNumber(this);
+                });
+            }
+
             // Campos de texto para converter para maiúsculas
-            const textInputs = ['brand', 'model', 'displacement', 'clientName'];
+            const textInputs = ['brand', 'model', 'displacement'];
             
             textInputs.forEach(field => {
                 const input = document.getElementById(field);
@@ -1932,15 +1976,54 @@
                     });
                 }
             });
+        }
+
+        // Formatar número de telefone
+        function formatPhoneNumber(input) {
+            // Remove tudo que não é número
+            let value = input.value.replace(/\D/g, '');
             
-            // Campo de telefone (não converter para maiúsculas)
-            const phoneInput = document.getElementById('clientPhone');
-            if (phoneInput) {
-                phoneInput.addEventListener('input', function() {
-                    formInputs.clientPhone = this.value;
-                    autoSaveForm();
-                });
+            // Limita a 11 dígitos
+            if (value.length > 11) {
+                value = value.substring(0, 11);
+                showToast('Telefone limitado a 11 dígitos');
             }
+            
+            // Formata o número
+            let formattedValue = '';
+            if (value.length > 0) {
+                formattedValue = '(' + value.substring(0, 2);
+            }
+            if (value.length > 2) {
+                formattedValue += ') ' + value.substring(2, 7);
+            }
+            if (value.length > 7) {
+                formattedValue += '-' + value.substring(7, 11);
+            }
+            
+            input.value = formattedValue;
+            formInputs.clientPhone = formattedValue;
+        }
+
+        // Validar número de telefone
+        function validatePhoneNumber(input) {
+            const value = input.value.replace(/\D/g, '');
+            
+            if (value && value.length < 10) {
+                showError('clientPhone', 'Número inválido (mínimo 10 dígitos)');
+                input.style.borderColor = 'var(--destructive)';
+                return false;
+            } else if (value && value.length > 11) {
+                showError('clientPhone', 'Número inválido (máximo 11 dígitos)');
+                input.style.borderColor = 'var(--destructive)';
+                return false;
+            } else if (value) {
+                clearError('clientPhone');
+                input.style.borderColor = '';
+                return true;
+            }
+            
+            return true; // Campo opcional, então vazio é válido
         }
 
         // Validação específica para motorização
@@ -2076,24 +2159,55 @@
         // Navigation between sections
         function nextSection() {
             if (validateCurrentSection()) {
-                if (currentSection < totalSections) {
+                // Verifica se precisa pular a seção 3 (Preferência de Óleo)
+                const hasOilService = formInputs.serviceTypes.includes('oil');
+                
+                if (currentSection === 2 && !hasOilService) {
+                    // Pular seção 3 se não tiver serviço de óleo selecionado
                     document.getElementById(`section${currentSection}`).classList.remove('active');
-                    currentSection++;
+                    currentSection = 4; // Vai direto para a seção 4
                     document.getElementById(`section${currentSection}`).classList.add('active');
-                    updateProgressIndicator();
-                    scrollToTop();
                     
-                    // Auto-save form
-                    autoSaveForm();
+                    // Atualizar progresso para mostrar que seção 3 foi pulada
+                    document.getElementById(`step3`).classList.add('completed');
+                    document.getElementById(`label3`).classList.remove('active');
+                } else {
+                    // Navegação normal
+                    if (currentSection < totalSections) {
+                        document.getElementById(`section${currentSection}`).classList.remove('active');
+                        currentSection++;
+                        document.getElementById(`section${currentSection}`).classList.add('active');
+                    }
                 }
+                
+                updateProgressIndicator();
+                scrollToTop();
+                
+                // Auto-save form
+                autoSaveForm();
             }
         }
 
         function prevSection() {
             if (currentSection > 1) {
-                document.getElementById(`section${currentSection}`).classList.remove('active');
-                currentSection--;
-                document.getElementById(`section${currentSection}`).classList.add('active');
+                // Verifica se estava na seção 4 e precisa voltar para a 2 (se pulou a 3)
+                const hasOilService = formInputs.serviceTypes.includes('oil');
+                
+                if (currentSection === 4 && !hasOilService) {
+                    // Voltar da seção 4 para a 2 (pulou a 3)
+                    document.getElementById(`section${currentSection}`).classList.remove('active');
+                    currentSection = 2;
+                    document.getElementById(`section${currentSection}`).classList.add('active');
+                    
+                    // Remover completed da seção 3
+                    document.getElementById(`step3`).classList.remove('completed');
+                } else {
+                    // Navegação normal
+                    document.getElementById(`section${currentSection}`).classList.remove('active');
+                    currentSection--;
+                    document.getElementById(`section${currentSection}`).classList.add('active');
+                }
+                
                 updateProgressIndicator();
                 scrollToTop();
             }
@@ -2166,7 +2280,7 @@
                     isValid = false;
                 }
             } else if (currentSection === 3) {
-                // Oil type validation
+                // Oil type validation (só valida se tiver serviço de óleo)
                 const hasOilService = formInputs.serviceTypes.includes('oil');
                 if (hasOilService && !formInputs.oilType) {
                     showError('oilType', 'Selecione uma preferência de óleo');
@@ -2234,24 +2348,6 @@
             }
             
             formInputs.serviceTypes = [...selectedServices];
-            
-            // Check if "Troca de Óleo + Filtros" is selected
-            const hasOilService = selectedServices.includes('oil');
-            
-            if (hasOilService) {
-                // Show oil type section in section 3
-                const oilSection = document.querySelector('#section3 .oil-type-section');
-                if (oilSection) {
-                    oilSection.classList.add('visible');
-                }
-            } else {
-                formInputs.oilType = 'Indique-me a melhor opção';
-                const oilRecommend = document.getElementById('oil-recommend');
-                if (oilRecommend) {
-                    oilRecommend.checked = true;
-                    oilRecommend.closest('.checkbox-option').classList.add('checked');
-                }
-            }
             
             // Check if freio traseiro options are selected
             const hasPastilhasTraseiras = selectedServices.includes('pastilhas-traseiras');
@@ -2508,7 +2604,14 @@
                 .join(', ');
             
             document.getElementById('summaryServices').textContent = servicesSummary || 'Nenhum serviço selecionado';
-            document.getElementById('summaryOil').textContent = formInputs.oilType;
+            
+            // Mostra preferência de óleo apenas se tiver serviço de óleo selecionado
+            const hasOilService = formInputs.serviceTypes.includes('oil');
+            if (hasOilService) {
+                document.getElementById('summaryOil').textContent = formInputs.oilType;
+            } else {
+                document.getElementById('summaryOil').textContent = 'Não se aplica';
+            }
             
             if (formInputs.clientName || formInputs.clientPhone) {
                 document.getElementById('summaryClientData').style.display = 'flex';
@@ -2572,7 +2675,7 @@
             localStorage.setItem('doOleoFormData', JSON.stringify(formData));
         }
 
-        // Load saved form
+        // Load saved form - CORRIGIDO: Restaura dados mas SEMPRE mantém na seção 1
         function loadSavedForm() {
             const saved = localStorage.getItem('doOleoFormData');
             if (saved) {
@@ -2640,19 +2743,12 @@
                         }
                     }
                     
-                    // Restore section
-                    if (formData.currentSection && formData.currentSection <= totalSections) {
-                        document.getElementById(`section${currentSection}`).classList.remove('active');
-                        currentSection = formData.currentSection;
-                        document.getElementById(`section${currentSection}`).classList.add('active');
-                        updateProgressIndicator();
-                    }
-                    
+                    // NÃO RESTAURA A SEÇÃO - SEMPRE MANTÉM NA SEÇÃO 1
                     updateRequiredFields();
                     
                     // Show toast notification
                     setTimeout(() => {
-                        showToast('Formulário restaurado automaticamente!');
+                        showToast('Dados anteriores carregados! Você está na página 1.');
                     }, 1000);
                     
                 } catch (error) {
@@ -2785,11 +2881,8 @@
 
             document.getElementById('freioOptions').style.display = 'none';
             
-            // Reset sections
-            document.querySelectorAll('.form-section').forEach((section, index) => {
-                section.classList.remove('active');
-                if (index === 0) section.classList.add('active');
-            });
+            // Reset sections - GARANTE QUE SEMPRE VOLTA PARA A SEÇÃO 1
+            resetFormToSection1();
             
             updateRequiredFields();
             updateProgressIndicator();
